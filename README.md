@@ -8,11 +8,13 @@ This project implements a "Turing machine"-style pipeline composed of three sequ
 
 ## Features
 
+- **🎨 Interactive UI** - Beautiful step-by-step visualization showing agents working in real-time
 - Three-agent translation pipeline (EN→FR→HE→EN)
 - Automated spelling error injection at configurable rates
 - Semantic similarity measurement using embeddings
 - Visualization of error rate vs. semantic drift
 - Comprehensive experiment orchestration and result tracking
+- **No API key required** - Pre-built demo with Claude-generated translations
 
 ## Quick Start
 
@@ -29,15 +31,73 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
-
-# Configure API keys
-cp .env.example .env
-# Edit .env and add your API key (Anthropic or OpenAI)
 ```
 
-### 2. Run Experiment
+### 2. Run the Interactive Demo (Recommended!)
+
+**🎨 The easiest way to see the system in action - NO API KEY REQUIRED!**
 
 ```bash
+# Make sure virtual environment is activated
+source venv/bin/activate
+
+# Run the beautiful interactive UI
+python run_interactive.py
+```
+
+**What you'll see:**
+- 🤖 Beautiful colored panels and headers
+- 🇬🇧 → 🇫🇷 → 🇮🇱 → 🇬🇧 Translation chain with country flags
+- ⏳ Progress bars showing each agent "thinking"
+- 📊 Tables displaying input/output for every translation step
+- 📈 Real-time semantic distance calculation with color-coded interpretation
+- ✅ Summary table showing results across all error rates
+
+**Interactive Mode Options:**
+1. **Quick Demo** - Tests 0%, 25%, 50% error rates (fast preview)
+2. **Full Analysis** - Tests 0%, 10%, 20%, 30%, 40%, 50% (comprehensive)
+3. **Single Test** - Choose your own custom error rate
+
+**Example Output:**
+```
+╭──────────────────────────────────────────────────────────────╮
+│  🤖 AGENT 1: English → French 🇬🇧 → 🇫🇷                      │
+╰──────────────────────────────────────────────────────────────╯
+  Agent 1 is translating...
+
+  Input (English)                    Output (French)
+ ──────────────────────────────────────────────────────────────
+  The remarkable transformation...   La transformation...
+
+╭──────────────────────────────────────────────────────────────╮
+│  Cosine Distance: 0.009197                                   │
+│  Interpretation: ✅ Very similar - Minimal semantic drift!   │
+╰──────────────────────────────────────────────────────────────╯
+```
+
+### 3. Alternative: Run Automated Experiment
+
+For batch processing without the interactive UI:
+
+```bash
+# No API key needed - uses pre-generated translations
+python run_experiment_mock.py
+```
+
+Results saved in `results/`:
+- `experiment_results_mock_*.json` - Full data
+- `error_rate_vs_distance.png` - Main graph
+- `experiment_summary.png` - Summary figure
+
+### 4. Advanced: Run with Your Own API Key
+
+If you want to test custom sentences with real-time API calls:
+
+```bash
+# Configure API keys (only needed for custom experiments)
+cp .env.example .env
+# Edit .env and add your API key (Anthropic or OpenAI)
+
 # Run full error rate sweep (0% to 50%)
 python -m src.main
 
@@ -51,13 +111,6 @@ python -m src.main --single 0.25
 python -m src.main --provider openai --model gpt-4
 ```
 
-### 3. View Results
-
-Results will be saved in the `results/` directory:
-- `experiment_results_*.json` - Detailed experiment data
-- `error_rate_vs_distance.png` - Main visualization
-- `experiment_summary.png` - Comprehensive summary figure
-
 ## Project Structure
 
 ```
@@ -69,7 +122,9 @@ tri-lingual-turing-agents/
 │   ├── error_injection.py  # Spelling error generator
 │   ├── pipeline.py         # Experiment orchestration
 │   ├── visualization.py    # Graph generation
-│   └── main.py            # Entry point
+│   └── main.py            # CLI entry point
+├── run_interactive.py     # 🎨 Interactive UI (RECOMMENDED!)
+├── run_experiment_mock.py # Automated demo (no API key)
 ├── results/               # Output directory (generated)
 ├── tests/                 # Unit tests
 ├── .env.example          # Environment template
@@ -77,19 +132,23 @@ tri-lingual-turing-agents/
 ├── requirements.txt
 ├── README.md
 ├── RPD.md                # Research/Product/Design document
+├── USAGE_GUIDE.md        # Detailed usage instructions
+├── FINAL_REPORT.md       # Experimental results and analysis
 └── IMPLEMENTATION_PLAN.md  # Development roadmap
 ```
 
 ## Documentation
 
+- **[Usage Guide](USAGE_GUIDE.md)** - Complete usage instructions with examples
 - **[RPD Document](RPD.md)** - Research/Product/Design specifications
 - **[Implementation Plan](IMPLEMENTATION_PLAN.md)** - Detailed development phases
+- **[Final Report](FINAL_REPORT.md)** - Experimental results and analysis
 
 ## Requirements
 
 - Python 3.8+
-- Anthropic API key OR OpenAI API key
 - ~2GB disk space (for embedding models)
+- **Optional**: Anthropic API key OR OpenAI API key (only for custom experiments)
 
 ## Configuration
 
@@ -122,6 +181,70 @@ Options:
   --output-dir TEXT      Output directory for results
   --single FLOAT         Run single experiment with this error rate (0.0-1.0)
 ```
+
+## Understanding the Interactive UI
+
+The interactive demo (`run_interactive.py`) shows you exactly what's happening at each step:
+
+### Step-by-Step Process
+
+1. **System Introduction**
+   - Explains the 3-agent pipeline
+   - Shows what the experiment measures
+
+2. **Original Sentence**
+   - Displays the clean English sentence (20 words)
+   - Shows word count
+
+3. **Spelling Error Injection** (if error rate > 0%)
+   - Shows before/after comparison
+   - Lists corrupted words
+   - Visual table highlighting changes
+
+4. **Agent 1: English → French** 🇬🇧 → 🇫🇷
+   - Progress bar showing translation in progress
+   - Input: English (clean or corrupted)
+   - Output: French translation
+   - Table comparing both
+
+5. **Agent 2: French → Hebrew** 🇫🇷 → 🇮🇱
+   - Progress bar showing translation in progress
+   - Input: French text
+   - Output: Hebrew translation
+   - Table comparing both
+
+6. **Agent 3: Hebrew → English** 🇮🇱 → 🇬🇧
+   - Progress bar showing translation in progress
+   - Input: Hebrew text
+   - Output: Final English translation
+   - Table comparing both
+
+7. **Semantic Similarity Analysis** 📊
+   - Computes embeddings for original and final English
+   - Calculates cosine distance
+   - Shows distance value (e.g., 0.009197)
+   - Color-coded interpretation:
+     - ✅ **Green** (< 0.1): Very similar - Minimal semantic drift
+     - ✓ **Yellow** (0.1-0.3): Similar - Low semantic drift
+     - ~ **Orange** (0.3-0.5): Moderate drift
+     - ⚠ **Red** (> 0.5): High semantic drift
+
+8. **Final Summary**
+   - Table showing all error rates tested
+   - Distance measurements for each
+   - Drift percentage compared to baseline
+   - Status indicators for each result
+
+### Key Findings
+
+The experiment demonstrates that:
+- **0-20% error rate**: Distance ≈ 0.030 (no measurable impact)
+- **30% error rate**: Distance ≈ 0.043 (threshold effect begins)
+- **50% error rate**: Distance ≈ 0.047 (still "very similar")
+- **Conclusion**: LLMs are exceptionally robust to spelling errors
+- **Semantic preservation**: >95% across all error rates
+
+See [FINAL_REPORT.md](FINAL_REPORT.md) for detailed analysis.
 
 ## Course
 
