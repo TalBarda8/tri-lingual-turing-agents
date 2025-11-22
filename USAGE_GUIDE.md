@@ -6,7 +6,52 @@ This guide shows you how to run the tri-lingual agent pipeline experiment.
 
 ---
 
-## Option 1: Run the Pre-Built Experiment (Recommended - No API Key Needed!)
+## Option 1: Interactive Demo (BEST for Visualizing!) 🎨
+
+**NEW!** This beautiful interactive interface shows you exactly what's happening at each step - you can SEE the agents working!
+
+### Steps:
+
+```bash
+# 1. Navigate to the project
+cd tri-lingual-turing-agents
+
+# 2. Activate the virtual environment
+source venv/bin/activate
+
+# 3. Run the interactive demo
+python run_interactive.py
+```
+
+### What You'll See:
+
+✅ **Beautiful Terminal UI:**
+- 🤖 Colorful headers and panels
+- 🇬🇧 → 🇫🇷 → 🇮🇱 → 🇬🇧 Translation chain with flags
+- Progress bars showing agents "thinking"
+- Input/Output tables for each translation
+- Real-time semantic distance calculation
+- Color-coded interpretation of results
+
+✅ **Three Mode Options:**
+1. **Quick Demo** - Test 0%, 25%, 50% error rates (fast)
+2. **Full Analysis** - Test 0%, 10%, 20%, 30%, 40%, 50% (comprehensive)
+3. **Single Test** - Choose your own error rate
+
+✅ **Step-by-Step Visualization:**
+- See the original sentence
+- Watch spelling errors being injected
+- See Agent 1 translate English → French
+- See Agent 2 translate French → Hebrew
+- See Agent 3 translate Hebrew → English
+- See the semantic distance calculation
+- See the final summary with all results
+
+**This is the RECOMMENDED way to understand what the system does!**
+
+---
+
+## Option 2: Run the Pre-Built Experiment (Recommended - No API Key Needed!)
 
 This uses my (Claude's) pre-generated translations, so it works immediately without any API keys.
 
