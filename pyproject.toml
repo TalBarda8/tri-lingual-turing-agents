@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tri-lingual-agents"
+version = "1.0.0"
+description = "Multi-agent translation system exploring semantic drift through round-trip translation"
+readme = "README.md"
+authors = [
+    {name = "Tal Barda", email = "tal.barda@example.com"}
+]
+license = {text = "Educational Use Only"}
+requires-python = ">=3.8"
+dependencies = [
+    "anthropic>=0.18.0",
+    "openai>=1.12.0",
+    "sentence-transformers>=2.2.0",
+    "transformers>=4.36.0",
+    "numpy>=1.24.0",
+    "scipy>=1.11.0",
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "python-dotenv>=1.0.0",
+    "tqdm>=4.66.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/TalBarda8/tri-lingual-turing-agents"
+Documentation = "https://github.com/TalBarda8/tri-lingual-turing-agents#readme"
+Repository = "https://github.com/TalBarda8/tri-lingual-turing-agents"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --strict-markers"
+
+[tool.black]
+line-length = 100
+target-version = ["py38", "py39", "py310", "py311"]
+include = '\.pyi?$'
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*", "*/venv/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
