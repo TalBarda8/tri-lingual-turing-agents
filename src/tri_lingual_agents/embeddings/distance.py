@@ -1,8 +1,23 @@
 """
-Embeddings and Distance Module
+Embeddings and Semantic Distance Module
 
-This module provides functions to compute sentence embeddings and calculate
-semantic distances between sentences.
+Building Block for computing sentence embeddings and calculating semantic distances.
+
+This module provides functionality to encode text into dense vector representations
+and measure semantic similarity using distance metrics.
+
+Input Data:
+- text: str or List[str] - Text(s) to encode
+- embedding1, embedding2: np.ndarray - Vector representations for distance calculation
+
+Output Data:
+- embeddings: np.ndarray - Dense vector representations
+- distance: float - Semantic distance metric
+- similarity: float - Semantic similarity score
+
+Setup Data:
+- model_name: str - Sentence-transformers model name (default: 'all-MiniLM-L6-v2')
+- metric: str - Distance metric ('cosine' or 'euclidean')
 """
 
 import numpy as np
@@ -14,6 +29,17 @@ from scipy.spatial.distance import cosine, euclidean
 class EmbeddingModel:
     """
     Wrapper class for sentence embedding models.
+
+    Building Block: Embedding Model
+
+    Input Data:
+    - text: str or List[str] - Text(s) to encode
+
+    Output Data:
+    - embeddings: np.ndarray - Dense vector representation(s)
+
+    Setup Data:
+    - model_name: str - Sentence-transformers model name
 
     Attributes:
         model_name (str): Name of the sentence-transformers model
@@ -27,7 +53,17 @@ class EmbeddingModel:
         Args:
             model_name: Name of the sentence-transformers model to use
                        Options: 'all-MiniLM-L6-v2' (default), 'all-mpnet-base-v2'
+
+        Raises:
+            TypeError: If model_name is not a string
+            ValueError: If model_name is empty
         """
+        # Input validation
+        if not isinstance(model_name, str):
+            raise TypeError(f"model_name must be str, got {type(model_name).__name__}")
+        if not model_name.strip():
+            raise ValueError("model_name cannot be empty or whitespace only")
+
         self.model_name = model_name
         print(f"Loading embedding model: {model_name}...")
         self.model = SentenceTransformer(model_name)

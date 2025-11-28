@@ -1,8 +1,22 @@
 """
 Spelling Error Injection Module
 
-This module provides functions to inject realistic spelling errors into English sentences
-at controlled rates for robustness testing.
+Building Block for injecting controlled spelling errors into text for robustness testing.
+
+This module provides functionality to corrupt text with realistic spelling errors
+at configurable rates, enabling systematic testing of LLM error handling.
+
+Input Data:
+- sentence: str - Original text to corrupt
+- error_rate: float - Percentage of words to corrupt (0.0 to 1.0)
+
+Output Data:
+- corrupted_sentence: str - Text with spelling errors injected
+- corrupted_words: List[str] - List of "original → corrupted" transformations
+
+Setup Data:
+- seed: int - Random seed for reproducibility (optional)
+- min_word_length: int - Minimum word length to corrupt (default: 3)
 """
 
 import random
@@ -137,6 +151,17 @@ def inject_spelling_errors(sentence: str, error_rate: float, seed: int = None) -
     """
     Inject spelling errors into a sentence at a specified rate.
 
+    Building Block: Spelling Error Injector
+
+    Input Data:
+    - sentence: str - Original text to corrupt
+    - error_rate: float - Percentage of words to corrupt (0.0 to 1.0)
+    - seed: int - Random seed for reproducibility (optional)
+
+    Output Data:
+    - corrupted_sentence: str - Text with spelling errors
+    - corrupted_words: List[str] - List of "original → corrupted" pairs
+
     Args:
         sentence: The original sentence
         error_rate: Percentage of words to corrupt (0.0 to 1.0)
@@ -144,7 +169,18 @@ def inject_spelling_errors(sentence: str, error_rate: float, seed: int = None) -
 
     Returns:
         Tuple of (corrupted_sentence, list_of_corrupted_words)
+
+    Raises:
+        TypeError: If sentence is not a string or error_rate is not numeric
+        ValueError: If sentence is empty or error_rate is out of range
+
+    Example:
+        >>> inject_spelling_errors("The quick brown fox", 0.5, seed=42)
+        ("The qiuck browwn fox", ["quick → qiuck", "brown → browwn"])
     """
+    # === INPUT VALIDATION ===
+    _validate_inject_errors_input(sentence, error_rate, seed)
+
     if seed is not None:
         random.seed(seed)
 
@@ -192,7 +228,19 @@ def calculate_error_statistics(original: str, corrupted: str, corrupted_words: L
 
     Returns:
         Dictionary with statistics
+
+    Raises:
+        TypeError: If inputs are not correct types
+        ValueError: If inputs are invalid
     """
+    # Input validation
+    if not isinstance(original, str):
+        raise TypeError(f"original must be str, got {type(original).__name__}")
+    if not isinstance(corrupted, str):
+        raise TypeError(f"corrupted must be str, got {type(corrupted).__name__}")
+    if not isinstance(corrupted_words, list):
+        raise TypeError(f"corrupted_words must be list, got {type(corrupted_words).__name__}")
+
     # Count words (simple whitespace split for word count)
     original_words = [w for w in re.findall(r'\b\w+\b', original)]
     total_words = len(original_words)
@@ -208,3 +256,47 @@ def calculate_error_statistics(original: str, corrupted: str, corrupted_words: L
         'original_sentence': original,
         'corrupted_sentence': corrupted
     }
+
+
+def _validate_inject_errors_input(sentence: str, error_rate: float, seed: int = None):
+    """
+    Validate inputs for inject_spelling_errors function.
+
+    Performs comprehensive validation including type checking, value range
+    checking, and precondition checking.
+
+    Args:
+        sentence: Text to validate
+        error_rate: Error rate to validate
+        seed: Seed to validate
+
+    Raises:
+        TypeError: If types are incorrect
+        ValueError: If values are out of valid ranges
+    """
+    # === TYPE CHECKING ===
+    if not isinstance(sentence, str):
+        raise TypeError(f"sentence must be str, got {type(sentence).__name__}")
+
+    if not isinstance(error_rate, (int, float)):
+        raise TypeError(f"error_rate must be numeric, got {type(error_rate).__name__}")
+
+    if seed is not None and not isinstance(seed, int):
+        raise TypeError(f"seed must be int or None, got {type(seed).__name__}")
+
+    # === VALUE RANGE CHECKING ===
+    if not 0.0 <= error_rate <= 1.0:
+        raise ValueError(
+            f"error_rate must be in range [0.0, 1.0], got {error_rate}"
+        )
+
+    # === PRECONDITION CHECKING ===
+    if not sentence.strip():
+        raise ValueError("sentence cannot be empty or whitespace only")
+
+    # Check minimum word count (at least 3 words for meaningful corruption)
+    words = re.findall(r'\b\w+\b', sentence)
+    if len(words) < 3:
+        raise ValueError(
+            f"sentence must contain at least 3 words, got {len(words)}"
+        )
