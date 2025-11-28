@@ -9,6 +9,7 @@ This project implements a "Turing machine"-style pipeline composed of three sequ
 ## Features
 
 - **🎨 Interactive UI** - Beautiful step-by-step visualization showing agents working in real-time
+- **🤖 Real Agent Support** - Use actual Claude Code translation agents OR mock agents
 - Three-agent translation pipeline (EN→FR→HE→EN)
 - Automated spelling error injection at configurable rates
 - Semantic similarity measurement using embeddings
@@ -125,6 +126,9 @@ tri-lingual-turing-agents/
 │   └── main.py            # CLI entry point
 ├── run_interactive.py     # 🎨 Interactive UI (RECOMMENDED!)
 ├── run_experiment_mock.py # Automated demo (no API key)
+├── run_experiment_with_real_agents.py  # 🤖 Real agent orchestration
+├── run_full_experiment_suite.py        # Batch preparation for real agents
+├── compile_real_agent_results.py       # Results compiler for real agents
 ├── results/               # Output directory (generated)
 ├── tests/                 # Unit tests
 ├── .env.example          # Environment template
@@ -133,6 +137,7 @@ tri-lingual-turing-agents/
 ├── README.md
 ├── RPD.md                # Research/Product/Design document
 ├── USAGE_GUIDE.md        # Detailed usage instructions
+├── REAL_AGENTS_GUIDE.md  # Real vs. mock agents guide
 ├── FINAL_REPORT.md       # Experimental results and analysis
 └── IMPLEMENTATION_PLAN.md  # Development roadmap
 ```
@@ -140,6 +145,7 @@ tri-lingual-turing-agents/
 ## Documentation
 
 - **[Usage Guide](USAGE_GUIDE.md)** - Complete usage instructions with examples
+- **[Real Agents Guide](REAL_AGENTS_GUIDE.md)** - How to use actual Claude Code agents vs. mock agents
 - **[RPD Document](RPD.md)** - Research/Product/Design specifications
 - **[Implementation Plan](IMPLEMENTATION_PLAN.md)** - Detailed development phases
 - **[Final Report](FINAL_REPORT.md)** - Experimental results and analysis
