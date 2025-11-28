@@ -28,16 +28,24 @@ __all__ = [
     "run_error_rate_sweep",
     "plot_from_results",
     "generate_all_visualizations",
+    # Parallel processing
+    "ParallelEmbeddingProcessor",
+    "ParallelAgentOrchestrator",
 ]
 
 # Import key components for easy access
-from .agents import TranslationAgent, create_agent_pipeline
+from .agents import (
+    TranslationAgent,
+    create_agent_pipeline,
+    ParallelAgentOrchestrator,
+)
 from .embeddings import (
     EmbeddingModel,
     get_embedding_model,
     calculate_distance,
     calculate_similarity,
     compare_sentences,
+    ParallelEmbeddingProcessor,
 )
 from .error_injection import inject_spelling_errors, calculate_error_statistics
 from .pipeline import (
