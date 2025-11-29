@@ -278,6 +278,252 @@ sequenceDiagram
 
 ---
 
+## UML Class Diagram: Translation Agent Hierarchy
+
+This section provides traditional UML class diagrams showing the object-oriented design of the system.
+
+### Translation Agent Class Hierarchy
+
+```mermaid
+classDiagram
+    class TranslationAgent {
+        <<abstract>>
+        +str source_lang
+        +str target_lang
+        +str provider
+        +str model
+        +int timeout
+        +int max_retries
+        +__init__(source_lang, target_lang, provider, model, timeout)
+        +translate(text: str, handle_errors: bool) str
+        #_build_prompt(text: str, handle_errors: bool) str*
+        #_call_api(prompt: str) str*
+        #_retry_with_backoff(func, max_retries) Any
+    }
+
+    class EnglishToFrenchTranslator {
+        +__init__(provider, model)
+        +translate(text: str, handle_errors: bool) str
+        #_build_prompt(text: str, handle_errors: bool) str
+        #_call_api(prompt: str) str
+    }
+
+    class FrenchToHebrewTranslator {
+        +__init__(provider, model)
+        +translate(text: str) str
+        #_build_prompt(text: str, handle_errors: bool) str
+        #_call_api(prompt: str) str
+    }
+
+    class HebrewToEnglishTranslator {
+        +__init__(provider, model)
+        +translate(text: str) str
+        #_build_prompt(text: str, handle_errors: bool) str
+        #_call_api(prompt: str) str
+    }
+
+    class MockTranslationAgent {
+        +dict mock_translations
+        +__init__(source_lang, target_lang, mock_data)
+        +translate(text: str, handle_errors: bool) str
+        #_get_mock_response(text: str) str
+    }
+
+    TranslationAgent <|-- EnglishToFrenchTranslator
+    TranslationAgent <|-- FrenchToHebrewTranslator
+    TranslationAgent <|-- HebrewToEnglishTranslator
+    TranslationAgent <|-- MockTranslationAgent
+
+    class ParallelAgentOrchestrator {
+        +int max_concurrent
+        +Semaphore semaphore
+        +Queue results_queue
+        +Lock lock
+        +__init__(max_concurrent: int)
+        +run_experiments_parallel(experiments: List) List
+        #_run_single_experiment(experiment: Dict) Dict
+        #_collect_results() List
+    }
+
+    ParallelAgentOrchestrator o-- TranslationAgent : uses
+
+    note for TranslationAgent "Base class providing:\n- Retry logic with exponential backoff\n- Timeout protection\n- Error handling\n- Common translation interface"
+    note for EnglishToFrenchTranslator "Specialization:\n- Handles spelling errors\n- Error-aware prompting\n- English → French only"
+```
+
+### Embedding Model Class Hierarchy
+
+```mermaid
+classDiagram
+    class EmbeddingModel {
+        +str model_name
+        +str device
+        +SentenceTransformer model
+        +int embedding_dim
+        +__init__(model_name: str, device: str)
+        +encode(text: Union[str, List[str]]) ndarray
+        +get_embedding_dim() int
+        #_load_model() SentenceTransformer
+    }
+
+    class ParallelEmbeddingProcessor {
+        +str model_name
+        +int num_processes
+        +Pool pool
+        +__init__(model_name: str, num_processes: int)
+        +encode_batch(texts: List[str]) ndarray
+        +encode_single(text: str) ndarray
+        #_encode_worker(text: str) ndarray
+        +close() void
+    }
+
+    EmbeddingModel <.. ParallelEmbeddingProcessor : uses
+
+    note for EmbeddingModel "Singleton-like caching:\nget_embedding_model() ensures\nonly one instance per model name"
+    note for ParallelEmbeddingProcessor "Uses multiprocessing.Pool\nfor CPU-bound embedding\ncalculations"
+```
+
+### Pipeline Orchestration Class Structure
+
+```mermaid
+classDiagram
+    class ExperimentConfig {
+        +str sentence
+        +float error_rate
+        +int seed
+        +bool save_results
+        +str output_dir
+    }
+
+    class ExperimentResult {
+        +float error_rate
+        +str original_sentence
+        +str corrupted_sentence
+        +List~str~ corrupted_words
+        +str french_translation
+        +str hebrew_translation
+        +str final_english
+        +float cosine_distance
+        +str timestamp
+    }
+
+    class PipelineOrchestrator {
+        <<namespace>>
+        +run_experiment(sentence, error_rate, agents, embedding_model) ExperimentResult
+        +run_error_rate_sweep(sentence, error_rates, provider, model) Dict
+        +save_experiment_results(results, output_path) void
+        +load_experiment_results(input_path) Dict
+    }
+
+    class SpellingErrorInjector {
+        +float error_rate
+        +int seed
+        +int min_word_length
+        +Random random
+        +__init__(error_rate, seed, min_word_length)
+        +inject_spelling_errors(text: str) Tuple[str, List[str]]
+        #_corrupt_word(word: str) str
+        #_should_corrupt_word(word: str) bool
+        #_substitute_char(char: str) str
+    }
+
+    PipelineOrchestrator ..> ExperimentConfig : uses
+    PipelineOrchestrator ..> ExperimentResult : creates
+    PipelineOrchestrator ..> SpellingErrorInjector : uses
+    PipelineOrchestrator ..> TranslationAgent : uses
+    PipelineOrchestrator ..> EmbeddingModel : uses
+
+    note for PipelineOrchestrator "Functional module:\nNo class instantiation\nStateless functions"
+```
+
+### Complete System Class Diagram
+
+```mermaid
+classDiagram
+    direction TB
+
+    class TranslationAgent {
+        <<abstract>>
+        +translate(text: str) str
+    }
+
+    class EnglishToFrenchTranslator
+    class FrenchToHebrewTranslator
+    class HebrewToEnglishTranslator
+    class MockTranslationAgent
+
+    TranslationAgent <|-- EnglishToFrenchTranslator
+    TranslationAgent <|-- FrenchToHebrewTranslator
+    TranslationAgent <|-- HebrewToEnglishTranslator
+    TranslationAgent <|-- MockTranslationAgent
+
+    class EmbeddingModel {
+        +encode(text) ndarray
+    }
+
+    class ParallelEmbeddingProcessor {
+        +encode_batch(texts) ndarray
+    }
+
+    class SpellingErrorInjector {
+        +inject_spelling_errors(text) Tuple
+    }
+
+    class PipelineOrchestrator {
+        <<namespace>>
+        +run_experiment() ExperimentResult
+    }
+
+    class VisualizationEngine {
+        <<namespace>>
+        +plot_error_vs_distance() str
+        +create_summary_figure() str
+    }
+
+    class ParallelAgentOrchestrator {
+        +run_experiments_parallel() List
+    }
+
+    PipelineOrchestrator ..> SpellingErrorInjector
+    PipelineOrchestrator ..> TranslationAgent
+    PipelineOrchestrator ..> EmbeddingModel
+    PipelineOrchestrator ..> VisualizationEngine
+    ParallelAgentOrchestrator ..> TranslationAgent
+    ParallelEmbeddingProcessor ..> EmbeddingModel
+
+    note for TranslationAgent "All translators implement\ncommon interface with\nretry logic and error handling"
+    note for PipelineOrchestrator "Main entry point:\nOrchestrates all components\nto run experiments"
+```
+
+### Key Design Patterns
+
+**1. Template Method Pattern** (TranslationAgent)
+- Base class defines algorithm structure (`translate()`)
+- Subclasses implement specific steps (`_build_prompt()`, `_call_api()`)
+- Common behavior (retry, timeout) in base class
+
+**2. Strategy Pattern** (Error Injection)
+- Four error strategies: substitution, transposition, omission, duplication
+- Selected randomly during corruption
+- Easy to add new error types
+
+**3. Facade Pattern** (PipelineOrchestrator)
+- Simplifies complex subsystem interactions
+- Single entry point: `run_experiment()`
+- Hides complexity of agents, embeddings, error injection
+
+**4. Singleton Pattern** (EmbeddingModel)
+- `get_embedding_model()` function caches instances
+- Prevents redundant model loading
+- Thread-safe access
+
+**5. Builder Pattern** (ExperimentConfig/Result)
+- Separates construction from representation
+- Immutable result objects
+- Type-safe configuration
+
+---
+
 ## Component Specifications
 
 ### 1. Error Injection Component
