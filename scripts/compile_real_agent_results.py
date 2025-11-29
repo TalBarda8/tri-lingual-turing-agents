@@ -6,8 +6,13 @@ This script takes all the agent outputs and compiles them into a complete
 experiment results file with semantic distance calculations.
 """
 
+import sys
+import os
+# Add parent directory to path to allow imports from src and scripts
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import json
-from run_experiment_with_real_agents import RealAgentPipelineCoordinator
+from scripts.run_experiment_with_real_agents import RealAgentPipelineCoordinator
 
 # Define all the real agent outputs from the 6 experiments
 experiments_data = [

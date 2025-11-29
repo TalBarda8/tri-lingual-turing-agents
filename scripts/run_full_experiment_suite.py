@@ -14,8 +14,13 @@ This will:
   3. Display instructions for Claude to process each one
 """
 
+import sys
+import os
+# Add parent directory to path to allow imports from src and scripts
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import json
-from run_experiment_with_real_agents import RealAgentPipelineCoordinator
+from scripts.run_experiment_with_real_agents import RealAgentPipelineCoordinator
 
 
 def prepare_all_experiments():

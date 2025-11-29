@@ -10,8 +10,12 @@ This script coordinates experiments using the three real translation agents:
 These agents are Claude Code agents invoked via the Task tool during conversation.
 """
 
-import json
+import sys
 import os
+# Add parent directory to path to allow imports from src
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+import json
 from datetime import datetime
 from typing import Dict, List, Any
 

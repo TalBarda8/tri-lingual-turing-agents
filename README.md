@@ -46,7 +46,7 @@ pip install -e .
 source venv/bin/activate
 
 # Run the beautiful interactive UI
-python run_interactive.py
+python scripts/run_interactive.py
 ```
 
 **What you'll see:**
@@ -85,7 +85,7 @@ For batch processing without the interactive UI:
 
 ```bash
 # No API key needed - uses pre-generated translations
-python run_experiment_mock.py
+python scripts/run_experiment_mock.py
 ```
 
 Results saved in `results/`:
@@ -127,11 +127,12 @@ tri-lingual-turing-agents/
 │   ├── pipeline.py         # Experiment orchestration
 │   ├── visualization.py    # Graph generation
 │   └── main.py            # CLI entry point
-├── run_interactive.py     # 🎨 Interactive UI (RECOMMENDED!)
-├── run_experiment_mock.py # Automated demo (no API key)
-├── run_experiment_with_real_agents.py  # 🤖 Real agent orchestration
-├── run_full_experiment_suite.py        # Batch preparation for real agents
-├── compile_real_agent_results.py       # Results compiler for real agents
+├── scripts/
+│   ├── run_interactive.py              # 🎨 Interactive UI (RECOMMENDED!)
+│   ├── run_experiment_mock.py          # Automated demo (no API key)
+│   ├── run_experiment_with_real_agents.py  # 🤖 Real agent orchestration
+│   ├── run_full_experiment_suite.py    # Batch preparation for real agents
+│   └── compile_real_agent_results.py   # Results compiler for real agents
 ├── results/               # Output directory (generated)
 ├── tests/                 # Unit tests
 ├── .env.example          # Environment template
@@ -237,7 +238,7 @@ Options:
 
 ## Understanding the Interactive UI
 
-The interactive demo (`run_interactive.py`) shows you exactly what's happening at each step:
+The interactive demo (`scripts/run_interactive.py`) shows you exactly what's happening at each step:
 
 ### Step-by-Step Process
 

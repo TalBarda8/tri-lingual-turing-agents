@@ -372,7 +372,7 @@ A: Non-linear with threshold effects. Relationship exhibits three phases: platea
 
 ### Code
 - **Source:** `src/` (agents.py, embeddings.py, error_injection.py, pipeline.py, visualization.py, main.py)
-- **Experiment script:** `run_experiment_mock.py`
+- **Experiment scripts:** `scripts/` (run_interactive.py, run_experiment_mock.py, run_experiment_with_real_agents.py)
 
 ---
 

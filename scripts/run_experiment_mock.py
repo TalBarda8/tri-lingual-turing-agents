@@ -6,8 +6,12 @@ This script uses pre-generated translations from Claude to run the complete
 tri-lingual pipeline experiment without requiring API keys.
 """
 
-import json
+import sys
 import os
+# Add parent directory to path to allow imports from src
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+import json
 from datetime import datetime
 from src.embeddings import get_embedding_model, calculate_distance
 from src.error_injection import inject_spelling_errors
