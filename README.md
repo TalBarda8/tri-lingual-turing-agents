@@ -9,13 +9,13 @@ This project implements a "Turing machine"-style pipeline composed of three sequ
 ## Features
 
 - **🎨 Interactive UI** - Beautiful step-by-step visualization showing agents working in real-time
-- **🤖 Real Agent Support** - Use actual Claude Code translation agents OR mock agents
+- **🤖 Multi-Agent Translation** - Three specialized Claude Code translation agents working sequentially
 - Three-agent translation pipeline (EN→FR→HE→EN)
 - Automated spelling error injection at configurable rates
 - Semantic similarity measurement using embeddings
 - Visualization of error rate vs. semantic drift
 - Comprehensive experiment orchestration and result tracking
-- **No API key required** - Pre-built demo with Claude-generated translations
+- Pre-built demo with Claude-generated translations
 
 ## Quick Start
 
@@ -39,7 +39,7 @@ pip install -e .
 
 ### 2. Run the Interactive Demo (Recommended!)
 
-**🎨 The easiest way to see the system in action - NO API KEY REQUIRED!**
+**🎨 The easiest way to see the system in action!**
 
 ```bash
 # Make sure virtual environment is activated
@@ -79,21 +79,7 @@ python run_interactive.py
 ╰──────────────────────────────────────────────────────────────╯
 ```
 
-### 3. Alternative: Run Automated Experiment
-
-For batch processing without the interactive UI:
-
-```bash
-# No API key needed - uses pre-generated translations
-python run_experiment_mock.py
-```
-
-Results saved in `results/`:
-- `experiment_results_mock_*.json` - Full data
-- `error_rate_vs_distance.png` - Main graph
-- `experiment_summary.png` - Summary figure
-
-### 4. Advanced: Run with Your Own API Key
+### 3. Advanced: Run with Your Own API Key
 
 If you want to test custom sentences with real-time API calls:
 
@@ -127,8 +113,10 @@ tri-lingual-turing-agents/
 │   ├── pipeline.py         # Experiment orchestration
 │   ├── visualization.py    # Graph generation
 │   └── main.py            # CLI entry point
+├── docs/
+│   ├── PRD.md             # Product Requirements Document
+│   └── ARCHITECTURE.md    # System architecture with C4 diagrams
 ├── run_interactive.py     # 🎨 Interactive UI (RECOMMENDED!)
-├── run_experiment_mock.py # Automated demo (no API key)
 ├── run_experiment_with_real_agents.py  # 🤖 Real agent orchestration
 ├── run_full_experiment_suite.py        # Batch preparation for real agents
 ├── compile_real_agent_results.py       # Results compiler for real agents
@@ -137,22 +125,17 @@ tri-lingual-turing-agents/
 ├── .env.example          # Environment template
 ├── .gitignore
 ├── requirements.txt
-├── README.md
-├── RPD.md                # Research/Product/Design document
-├── USAGE_GUIDE.md        # Detailed usage instructions
-├── REAL_AGENTS_GUIDE.md  # Real vs. mock agents guide
+├── README.md             # Project overview
 ├── FINAL_REPORT.md       # Experimental results and analysis
-└── IMPLEMENTATION_PLAN.md  # Development roadmap
+└── TEST_COVERAGE_FINAL_REPORT.md  # Test coverage documentation
 ```
 
 ## Documentation
 
-- **[Usage Guide](USAGE_GUIDE.md)** - Complete usage instructions with examples
-- **[Real Agents Guide](REAL_AGENTS_GUIDE.md)** - How to use actual Claude Code agents vs. mock agents
-- **[RPD Document](RPD.md)** - Research/Product/Design specifications
-- **[Implementation Plan](IMPLEMENTATION_PLAN.md)** - Detailed development phases
+- **[Product Requirements](docs/PRD.md)** - Complete product specifications and requirements
+- **[Architecture](docs/ARCHITECTURE.md)** - System architecture with C4 diagrams
 - **[Final Report](FINAL_REPORT.md)** - Experimental results and analysis
-- **[Test Coverage Report](TEST_COVERAGE_FINAL_REPORT.md)** - Comprehensive test coverage documentation
+- **[Test Coverage](TEST_COVERAGE_FINAL_REPORT.md)** - Comprehensive test coverage documentation (94% coverage)
 
 ## Running Tests
 
