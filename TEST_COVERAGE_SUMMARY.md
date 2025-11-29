@@ -162,12 +162,12 @@ Would require:
 
 ### Run All Tests
 ```bash
-pytest tests/ -v
+python3 -m pytest tests/ -v
 ```
 
 ### Run with Coverage Report
 ```bash
-pytest tests/ --cov=src/tri_lingual_agents --cov-report=term --cov-report=html
+python3 -m pytest tests/ --cov=src/tri_lingual_agents --cov-report=term --cov-report=html
 ```
 
 ### View HTML Coverage Report
@@ -177,14 +177,14 @@ open htmlcov/index.html
 
 ### Run Specific Test Module
 ```bash
-pytest tests/test_error_injection/ -v
-pytest tests/test_agents/ -v
-pytest tests/test_embeddings/ -v
+python3 -m pytest tests/test_error_injection/ -v
+python3 -m pytest tests/test_agents/ -v
+python3 -m pytest tests/test_embeddings/ -v
 ```
 
 ### Run with Parallel Execution (faster)
 ```bash
-pytest tests/ -n auto  # Requires pytest-xdist
+python3 -m pytest tests/ -n auto  # Requires pytest-xdist
 ```
 
 ---

@@ -267,19 +267,19 @@ These were created earlier and provide 69-98% coverage on their respective modul
 
 ```bash
 # Run all tests with coverage
-pytest tests/ --cov=src/tri_lingual_agents --cov-report=html --cov-report=term
+python3 -m pytest tests/ --cov=src/tri_lingual_agents --cov-report=html --cov-report=term
 
 # Run tests in parallel (faster)
-pytest tests/ -n auto
+python3 -m pytest tests/ -n auto
 
 # Generate HTML coverage report
-pytest tests/ --cov=src/tri_lingual_agents --cov-report=html
+python3 -m pytest tests/ --cov=src/tri_lingual_agents --cov-report=html
 open htmlcov/index.html
 
 # Run specific test module
-pytest tests/test_pipeline/ -v
-pytest tests/test_visualization/ -v
-pytest tests/test_parallel/ -v
+python3 -m pytest tests/test_pipeline/ -v
+python3 -m pytest tests/test_visualization/ -v
+python3 -m pytest tests/test_parallel/ -v
 ```
 
 ---
