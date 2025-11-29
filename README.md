@@ -282,6 +282,213 @@ The experiment demonstrates that:
 
 See [FINAL_REPORT.md](FINAL_REPORT.md) for detailed analysis.
 
+## Troubleshooting
+
+This section covers common issues and their solutions.
+
+### 1. Installation Errors
+
+#### Problem: `pip install -e .` fails with "No module named setuptools"
+**Solution:**
+```bash
+pip install --upgrade pip setuptools wheel
+pip install -e .
+```
+
+#### Problem: Package installation fails on M1/M2 Mac
+**Solution:**
+```bash
+# Use conda for ARM64 compatibility
+conda create -n tri-lingual python=3.9
+conda activate tri-lingual
+pip install -r requirements.txt
+pip install -e .
+```
+
+### 2. Embedding Model Download Issues
+
+#### Problem: "ConnectionError: Can't reach HuggingFace" or slow download
+**Solution:**
+```bash
+# Pre-download the model manually
+python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+
+# Or use alternative mirror (China/restricted regions)
+export HF_ENDPOINT=https://hf-mirror.com
+python scripts/run_interactive.py
+```
+
+#### Problem: "OSError: Disk quota exceeded" during model download
+**Solution:**
+```bash
+# Check available space (need ~2GB)
+df -h
+
+# Or specify custom cache directory with more space
+export TRANSFORMERS_CACHE=/path/to/larger/disk
+export SENTENCE_TRANSFORMERS_HOME=/path/to/larger/disk
+```
+
+### 3. API Key Issues
+
+#### Problem: "AuthenticationError: Invalid API key"
+**Solution:**
+```bash
+# Verify .env file exists and has correct format
+cat .env
+# Should show: ANTHROPIC_API_KEY=sk-ant-...
+
+# Ensure no extra spaces or quotes
+# Correct:   ANTHROPIC_API_KEY=sk-ant-api123456
+# Incorrect: ANTHROPIC_API_KEY = "sk-ant-api123456"
+
+# Verify key is loaded
+python -c "from dotenv import load_dotenv; import os; load_dotenv(); print(os.getenv('ANTHROPIC_API_KEY'))"
+```
+
+#### Problem: "RateLimitError: Rate limit exceeded"
+**Solution:**
+- **Free tier limit**: Wait 60 seconds between experiments
+- **Use mock mode**: Run `python scripts/run_experiment_mock.py` instead
+- **Upgrade API tier**: Contact Anthropic for higher limits
+
+### 4. Test Failures
+
+#### Problem: Tests fail with "ModuleNotFoundError: No module named 'tri_lingual_agents'"
+**Solution:**
+```bash
+# Install package in editable mode first
+pip install -e .
+
+# Verify installation
+python -c "import tri_lingual_agents; print(tri_lingual_agents.__version__)"
+# Should print: 1.0.0
+```
+
+#### Problem: Specific test fails: `test_openai_translator`
+**Solution:**
+This is expected if you don't have an OpenAI API key. The test validates error handling:
+```bash
+# Run tests excluding OpenAI tests
+pytest tests/ -v -k "not openai"
+
+# Or set a dummy key to pass validation tests
+export OPENAI_API_KEY=sk-dummy-key-for-testing
+```
+
+### 5. Runtime Errors
+
+#### Problem: "RuntimeError: CUDA out of memory" on GPU systems
+**Solution:**
+```bash
+# Force CPU usage for embeddings
+export CUDA_VISIBLE_DEVICES=""
+python scripts/run_interactive.py
+
+# Or modify code to use CPU explicitly
+# In src/tri_lingual_agents/embeddings/distance.py, set device='cpu'
+```
+
+#### Problem: Hebrew text displays as "???" or boxes
+**Solution:**
+```bash
+# Ensure UTF-8 encoding
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# On Windows, use UTF-8 code page
+chcp 65001
+```
+
+#### Problem: "Timeout waiting for agent response"
+**Solution:**
+- **Increase timeout**: Edit `src/tri_lingual_agents/agents/translators.py`, change `timeout=300` to `timeout=600`
+- **Check internet**: Agents need stable connection to API
+- **Use mock mode**: For offline testing, use `python scripts/run_experiment_mock.py`
+
+### 6. Import Errors After Updates
+
+#### Problem: "ImportError: cannot import name 'ParallelAgentOrchestrator'"
+**Solution:**
+```bash
+# Reinstall package after code changes
+pip install -e . --force-reinstall --no-deps
+
+# Clear Python cache
+find . -type d -name __pycache__ -exec rm -rf {} +
+find . -type f -name "*.pyc" -delete
+```
+
+### 7. Notebook Issues
+
+#### Problem: Jupyter notebook kernel crashes when running analysis
+**Solution:**
+```bash
+# Install ipykernel in virtual environment
+pip install ipykernel
+python -m ipykernel install --user --name=tri-lingual
+
+# Select "tri-lingual" kernel in Jupyter
+# Kernel > Change Kernel > tri-lingual
+```
+
+#### Problem: "FileNotFoundError: results/experiment_results_*.json"
+**Solution:**
+Run an experiment first to generate results:
+```bash
+python scripts/run_experiment_mock.py
+# Then run the notebook
+```
+
+### 8. Performance Issues
+
+#### Problem: Experiments take too long (>5 minutes per error rate)
+**Solution:**
+- **Use parallel processing**: Ensure `use_parallel=True` in code
+- **Reduce error rates**: Test fewer points: `[0, 0.25, 0.5]` instead of 6 rates
+- **Use mock mode**: `python scripts/run_experiment_mock.py` (instant results)
+
+### 9. Windows-Specific Issues
+
+#### Problem: "FileNotFoundError" or path errors on Windows
+**Solution:**
+```bash
+# Use raw strings for paths or forward slashes
+# Instead of: path = "C:\Users\..."
+# Use: path = r"C:\Users\..." or path = "C:/Users/..."
+
+# Or run from WSL (Windows Subsystem for Linux)
+wsl
+cd /mnt/c/path/to/project
+source venv/bin/activate
+```
+
+### 10. Getting More Help
+
+If issues persist:
+
+1. **Check logs**: Look for error messages in console output
+2. **Verify Python version**: Must be 3.8+ (`python --version`)
+3. **Check dependencies**: `pip list | grep -E "anthropic|sentence-transformers|torch"`
+4. **Report issue**: [GitHub Issues](https://github.com/TalBarda8/tri-lingual-turing-agents/issues)
+5. **Enable debug mode**: Set `export DEBUG=1` before running scripts
+
+**Common Debug Commands:**
+```bash
+# Verify environment
+python -c "import sys; print(f'Python {sys.version}')"
+python -c "import torch; print(f'PyTorch {torch.__version__}')"
+python -c "import anthropic; print(f'Anthropic {anthropic.__version__}')"
+
+# Test imports
+python -c "from tri_lingual_agents import run_experiment; print('✓ Import successful')"
+
+# Check file structure
+ls -la src/tri_lingual_agents/
+```
+
+---
+
 ## Course
 
 AI Agent Systems - University Assignment
