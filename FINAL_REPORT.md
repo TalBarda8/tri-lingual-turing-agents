@@ -361,18 +361,20 @@ A: Non-linear with threshold effects. Relationship exhibits three phases: platea
 ## 10. References
 
 ### Data Files
-- **Results JSON:** `results/experiment_results_mock_20251122_122824.json`
+- **Results JSON:** `results/experiment_results_real_agents_20251128.json`
 - **Main graph:** `results/error_rate_vs_distance.png`
 - **Summary figure:** `results/experiment_summary.png`
 
 ### Documentation
-- **RPD Document:** `RPD.md`
-- **Implementation Plan:** `IMPLEMENTATION_PLAN.md`
+- **Product Requirements:** `docs/PRD.md`
+- **Architecture:** `docs/ARCHITECTURE.md`
 - **README:** `README.md`
+- **Test Coverage:** `TEST_COVERAGE_FINAL_REPORT.md`
 
 ### Code
 - **Source:** `src/` (agents.py, embeddings.py, error_injection.py, pipeline.py, visualization.py, main.py)
-- **Experiment scripts:** `scripts/` (run_interactive.py, run_experiment_mock.py, run_experiment_with_real_agents.py)
+- **Experiment script:** `run_experiment_with_real_agents.py`
+- **Agent definitions:** `.claude/agents/` (english-french-translator.md, french-hebrew-translator.md, hebrew-english-translator.md)
 
 ---
 
