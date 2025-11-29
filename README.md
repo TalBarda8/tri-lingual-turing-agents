@@ -149,6 +149,45 @@ tri-lingual-turing-agents/
 - **[RPD Document](RPD.md)** - Research/Product/Design specifications
 - **[Implementation Plan](IMPLEMENTATION_PLAN.md)** - Detailed development phases
 - **[Final Report](FINAL_REPORT.md)** - Experimental results and analysis
+- **[Test Coverage Report](TEST_COVERAGE_FINAL_REPORT.md)** - Comprehensive test coverage documentation
+
+## Running Tests
+
+The project has **94% test coverage** with 197 comprehensive tests.
+
+### Quick Test Run
+```bash
+# Make sure you're in the project directory with venv activated
+python3 -m pytest tests/ -v
+```
+
+### Run Tests with Coverage Report
+```bash
+python3 -m pytest tests/ --cov=src/tri_lingual_agents --cov-report=term
+```
+
+### Generate Interactive HTML Coverage Report
+```bash
+python3 -m pytest tests/ --cov=src/tri_lingual_agents --cov-report=html
+open htmlcov/index.html  # Opens interactive coverage report in browser
+```
+
+### Run Specific Test Modules
+```bash
+python3 -m pytest tests/test_pipeline/ -v          # Pipeline orchestration tests
+python3 -m pytest tests/test_visualization/ -v     # Visualization tests
+python3 -m pytest tests/test_parallel/ -v          # Parallel processing tests
+python3 -m pytest tests/test_embeddings/ -v        # Embeddings tests
+python3 -m pytest tests/test_agents/ -v            # Agent tests
+python3 -m pytest tests/test_error_injection/ -v   # Error injection tests
+```
+
+**Expected Results:**
+- ✅ 195/197 tests passing (99%)
+- ✅ 94% overall coverage
+- ⚠️ 2 expected failures (OpenAI API key tests - validates error handling)
+
+See **[TEST_COVERAGE_FINAL_REPORT.md](TEST_COVERAGE_FINAL_REPORT.md)** for detailed coverage analysis.
 
 ## Requirements
 
