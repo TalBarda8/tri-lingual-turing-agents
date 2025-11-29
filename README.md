@@ -46,7 +46,7 @@ pip install -e .
 source venv/bin/activate
 
 # Run the beautiful interactive UI
-python run_interactive.py
+python scripts/run_interactive.py
 ```
 
 **What you'll see:**
@@ -220,7 +220,7 @@ Options:
 
 ## Understanding the Interactive UI
 
-The interactive demo (`run_interactive.py`) shows you exactly what's happening at each step:
+The interactive demo (`scripts/run_interactive.py`) shows you exactly what's happening at each step:
 
 ### Step-by-Step Process
 
