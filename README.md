@@ -32,6 +32,9 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Install the package in editable mode (required for tests)
+pip install -e .
 ```
 
 ### 2. Run the Interactive Demo (Recommended!)
@@ -154,6 +157,11 @@ tri-lingual-turing-agents/
 ## Running Tests
 
 The project has **94% test coverage** with 197 comprehensive tests.
+
+**⚠️ Prerequisites**: Make sure you've installed the package in editable mode:
+```bash
+pip install -e .
+```
 
 ### Quick Test Run
 ```bash
